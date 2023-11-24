@@ -1,4 +1,4 @@
     module.exports = {
-        database: process.env.MONGODB_URI
-    // || 'mongodb://localhost:2121/test',
-    }
+        database: process.env.MONGODB_URL
+        
+    } // exporting database. 
