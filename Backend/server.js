@@ -1,15 +1,18 @@
     require('dotenv').config();
     const express = require('express');
     const mongoose = require('mongoose');
-    const CONFIG = require('./configs/database');
+    const CONFIG = require('./configs/database');   
     const bodyParser = require('body-parser');
 
 
     const app = express();
     const port = process.env.PORT || 2121;
 
-    
-    mongoose.connect(CONFIG.database).then(
+
+   // JSON Body parser
+   app.use(bodyParser.json());
+
+    mongoose.connect(CONFIG.database,).then(
         () => {
             console.log('Successfully Connected to Database');
         },
@@ -27,6 +30,7 @@
     app.listen(port,() => {
         console.log(`Server is running on port ${port}`);
     })
+
 
 
 
