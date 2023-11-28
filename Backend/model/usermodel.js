@@ -11,4 +11,4 @@ const userSchema = new mongoose.Schema({
     phonenumber: Number
 })
     const userModel = mongoose.model('User',userSchema)
-    module.exports = userModel
+    module.exports = userModel 
