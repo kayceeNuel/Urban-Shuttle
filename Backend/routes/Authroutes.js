@@ -4,13 +4,13 @@ const express = require('express');
 const AuthController = require('../controllers/Authcontroller');
 const AuthRouter = express.Router();
 
-// AuthRouter.post('/signIn', AuthController.signIn);  
+// AuthRouter.post('/register', AuthController.register);  
 // AuthRouter.post('/login', AuthController.login)
 
 
-//Added a callback function to the Routes 
-AuthRouter.post('/signIn' ,(req,res) => {
-    AuthController.signIn(req,res);
+//Using a Callback function. 
+AuthRouter.post('/register' ,(req,res) => {
+    AuthController.register(req,res);
 })
 
 AuthRouter.post('/login', (req,res) => {

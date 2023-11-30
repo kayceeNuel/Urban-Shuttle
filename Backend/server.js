@@ -22,18 +22,18 @@
                 console.log('Can not connect to the database' + err);
             }
         );
-
+ 
 
         app.get('/', (req, res)=>{ 
             res.send('Hello, World!')
         }) 
         
 
-        // Endpoints 
+        // API Endpoints 
         app.use('/api/auth', AuthRouter );
 
 
-
+      
         app.listen(port,() => {
             console.log(`Server is running on port ${port}`);
         })
