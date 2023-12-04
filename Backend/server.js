@@ -4,6 +4,7 @@
         const AuthRouter = require('./routes/Authroutes')
         const CONFIG = require('./configs/database');   
         const bodyParser = require('body-parser');
+        const BusRouter = require('./routes//Busroutes')
 
 
 
@@ -31,6 +32,7 @@
 
         // API Endpoints 
         app.use('/api/auth', AuthRouter );
+        app.use('/api/Bus/', BusRouter)
 
 
       
