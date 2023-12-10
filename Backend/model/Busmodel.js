@@ -35,19 +35,19 @@ const busSchema = new mongoose.Schema({
     name: String,
     type: String,
     enum: ['Business', 'economy'],
+    required: true,
 
   },
 
-  availableSeat:{
-    type: Number,
-    required: true, 
-    default: 40, 
-    maxlength: 50,
+  bookedSeat: {
+    type: [
+      {
+        seatNumber: {type: String, required: true},
+        isAvailable: {type: Boolean, default: true}
+      }
+    ]
   },
   
-  bookedSeat: {
-    type:[]
-  },
 
  
 });
