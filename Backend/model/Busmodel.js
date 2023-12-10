@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 
 const busSchema = new mongoose.Schema({
+
   departure: {
     type: String,
     required: true, 
@@ -13,21 +14,42 @@ const busSchema = new mongoose.Schema({
     required: true,
   },
 
-  date: {
+  journeyDate: {
     type: String,
     required: true,
   },
 
   location: {
-    
+    type: {
+      type: String,
+      enum: ['point'],
+      required: true, 
+    },
+    coordinates : {
+      type: [Number],
+      required: true
+    }
+  },
+
+  busType: {
+    name: String,
+    type: String,
+    enum: ['Business', 'economy'],
 
   },
-  availableBus: {
-    seatCapacity: { type: Number, required: true },
-    price: { type: Number, required: true },
-    class: { type: String, required: true }, 
-    companyName: { type: String, required: true },
+
+  availableSeat:{
+    type: Number,
+    required: true, 
+    default: 40, 
+    maxlength: 50,
   },
+  
+  bookedSeat: {
+    type:[]
+  },
+
+ 
 });
 
 
