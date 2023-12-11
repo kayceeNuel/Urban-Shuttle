@@ -1,3 +1,4 @@
+        //imports
         require('dotenv').config();
         const express = require('express');
         const mongoose = require('mongoose');
@@ -5,7 +6,7 @@
         const CONFIG = require('./configs/database');   
         const bodyParser = require('body-parser');
         const BusRouter = require('./routes//Busroutes')
-
+        const passengerRouter = require('./routes/Passenger.routes');
 
 
         const app = express();
@@ -32,10 +33,11 @@
 
         // API Endpoints 
         app.use('/api/auth', AuthRouter );
-        app.use('/api/Bus/', BusRouter)
+        app.use('/api/Bus/', BusRouter);
+        app.use('/api/Details', passengerRouter);
 
 
-      
+      //start the server.
         app.listen(port,() => {
             console.log(`Server is running on port ${port}`);
         })
