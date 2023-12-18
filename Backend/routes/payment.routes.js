@@ -1,10 +1,22 @@
 
+
 const express = require('express');
-const  paymentController = require('../controllers/payment.controller');
 const paymentRouter = express.Router();
+const paymentController = require('../controllers/payment.controller');
 
-paymentRouter.post('/payment_checkout', (req,res) => {
-    paymentController.payment_checkout(req,res);
-})
+// paymentRouter.post('/add-Card', paymentController.addCustomersCard);
+// paymentRouter.post('/create-Charges', paymentController.chargeCustomers);
 
-module.express = paymentRouter;
+paymentRouter.post('/create_customer',(req,res) => {
+    paymentController.createNewCustomer(req,res)
+});
+
+paymentRouter.post('/add-Card', (req, res) => {
+    paymentController.addCustomersCard(req,res);
+});
+
+paymentRouter.post('/create-Charges', (req, res) => {
+    paymentController.chargeCustomers(req,res)
+});
+
+module.exports = paymentRouter;

@@ -8,8 +8,7 @@
         const bodyParser = require('body-parser');
         const BusRouter = require('./routes//Busroutes')
         const passengerRouter = require('./routes/Passenger.routes');
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-        // const paymentRouter = require('./routes/payment.routes')
+        const paymentRouter = require('./routes/payment.routes')
 
 
         const app = express();
@@ -41,8 +40,7 @@
         app.use('/api/auth', AuthRouter );
         app.use('/api/Bus/', BusRouter);
         app.use('/api/Details', passengerRouter);
-        // app.use('/api/payment', paymentRouter)
-
+        app.use('/api/payments', paymentRouter)
 
       //start the server.
         app.listen(port,() => {
