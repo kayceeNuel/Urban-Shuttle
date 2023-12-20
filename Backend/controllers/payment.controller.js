@@ -40,14 +40,33 @@ const paymentController = {
                         CVC: card_CVC
                     },
                 });
-                const addingCustomerCard = await stripe.customers.createSource(customer_id, {
+                const card = await stripe.customers.createSource(customer_id, {
                     source: card_Token.id,
                 });
-                return res.status(200).json(addingCustomerCard);
+                return res.status(200).json({card: card.id});
             } catch(error){
                 console.error('error creating card:', error);
                 res.status(500).json({error: 'Something went wrong on Stripe’s end. (These are rare.)'})
             }
         
-    }
+    }, 
+
+    chargeCustomers : async (req,res) => {
+        try {
+            const createCharge = await stripe.charges.create({
+                amount: 50 * 100, 
+                currency: 'usd',
+                card: req.body.card_ID,
+                receipt_email: req.body.email,
+                customer: req.body.card_ID,
+            });
+            res.status(201).json({ success:true, message: "Payment successful mail will be sent to you shortly." })
+        } catch(error) {
+            
+        }
+    },
+
  }
+
+
+ module.exports = paymentController;
