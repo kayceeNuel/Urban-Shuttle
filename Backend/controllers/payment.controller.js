@@ -1,81 +1,63 @@
-
-
-const stripe_key = process.env.STRIPE_SECRET_KEY ; 
+const stripe_key = process.env.STRIPE_SECRET_KEY;
 const stripe = require('stripe')(stripe_key);
 
-
 const paymentController = {
+  payment: async (req, res) => {
+    try {
+      const { id, duration, cardNumber, expMonth, expYear, card_CVC, name, email, charge } = req.body;
 
-    createNewCustomer: async (req, res) => {
-            try {
-                const customer = await stripe.customers.create({
-                    name: req.body.name,
-                    email: req.body.email,
-                });
-                res.status(200).json(customer);
-            }
-             catch (error) {
-                console.error('Error creating Card', error);
-                res.status(500).json({ error: 'Something went wrong on Stripe`s end. (These are rare.)' });
-            }
-    },
+      // Create a customer
+      const customer = await stripe.customers.create({
+        name: name,
+        email: email,
+      });
 
-    addCustomersCard: async (req, res) => {
-
-        const {
-            customer_id, 
-            card_Name, 
-            card_ExpYear, 
-            card_ExpMonth, 
-            card_Number, 
-            card_CVC,
-        } = req.body;
-
+      if (customer) {
         try {
-            const card_Token = await stripe.tokens.create({
-                card: {
-                    name: card_Name,
-                    number: card_Number,
-                    exp_month: card_ExpMonth,
-                    exp_year: card_ExpYear,
-                    cvc: card_CVC,
-                },
-            });
-        
-            const card = await stripe.customers.createSource(customer_id, {
-                source: `${card_Token.id}`,
-            });
-        
-            return res.status(200).json({ card: card.id });
-        } catch (tokenError) {
-            console.error('Error creating card token:', tokenError);
-            res.status(500).json({ error: 'Error creating card token on Stripe’s end. (These are rare.)' });
-        } 
-        // catch (error) {
-        //     console.error('Error creating card:', error);
-        //     res.status(500).json({ error: 'Something went wrong on Stripe’s end. (These are rare.)' });
-        // }
-        
-    }, 
+          // Create a card token
+          const cardToken = await stripe.tokens.create({
+            card: {
+              number: cardNumber,
+              exp_month: expMonth,
+              exp_year: expYear,
+              cvc: card_CVC,
+            },
+          });
 
-    chargeCustomers : async (req,res) => {
-        try {
-            const createCharge = await stripe.charges.create({
-                amount: 50 * 100,
-                currency: 'usd',
-                source: req.body.card_ID, // Use source instead of card
-                receipt_email: 'test@gmail.com',
-                customer: req.body.customer_id, // Use customer instead of card_ID
-            });
-        
-            res.status(201).json({ success:true, message: "Payment successful mail will be sent to you shortly." })
+          // Add the card to the customer
+          const addingUserCard = await stripe.customers.createSource(customer.id, {
+            source: cardToken.id,
+          });
+
+          // Charge the customer
+          const chargeResult = await stripe.charges.create({
+            amount: charge, 
+            currency: 'usd', 
+            customer: customer.id,
+            description: 'Payment for service', 
+          });
+
+          res.status(201).json({
+            success: true,
+            AmountCharged: chargeResult.amount / 100,
+            message: 'Payment successfully made.',
+          });
         } catch (error) {
-            console.error('Error creating charge:', error);
-            res.status(500).json({ error: 'Something went wrong on Stripe’s end. (These are rare.)' });
+          return res.status(501).json({
+            error: 'Internal server error',
+            success: false,
+            message: `Error in ${error.type}. and error is: ${error.message}`,
+          });
         }
-    },
+      }
+    } catch (error) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        success: false,
+        message: `Error in request body: ${error.message}`,
+      });
+    }
+  },
+};
 
- }
-
-
- module.exports = paymentController;
+module.exports = paymentController;
