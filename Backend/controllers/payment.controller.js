@@ -31,36 +31,43 @@ const paymentController = {
             card_CVC,
         } = req.body;
 
-            try  {
-                const card_Token = await stripe.tokens.create({
-                    card: {
-                        name: card_Name,
-                        number: card_Number,
-                        exp_month: card_ExpMonth,
-                        exp_year: card_ExpYear,
-                        cvc: card_CVC,
-                    },
-                });
-                const card = await stripe.customers.createSource(customer_id, {
-                    source: `${card_Token.id}`,
-                });
-                return res.status(200).json({card: card.id});
-            } catch(error){
-                console.error('error creating card:', error);
-                res.status(500).json({error: 'Something went wrong on Stripe’s end. (These are rare.)'})
-            }
+        try {
+            const card_Token = await stripe.tokens.create({
+                card: {
+                    name: card_Name,
+                    number: card_Number,
+                    exp_month: card_ExpMonth,
+                    exp_year: card_ExpYear,
+                    cvc: card_CVC,
+                },
+            });
+        
+            const card = await stripe.customers.createSource(customer_id, {
+                source: `${card_Token.id}`,
+            });
+        
+            return res.status(200).json({ card: card.id });
+        } catch (tokenError) {
+            console.error('Error creating card token:', tokenError);
+            res.status(500).json({ error: 'Error creating card token on Stripe’s end. (These are rare.)' });
+        } 
+        // catch (error) {
+        //     console.error('Error creating card:', error);
+        //     res.status(500).json({ error: 'Something went wrong on Stripe’s end. (These are rare.)' });
+        // }
         
     }, 
 
     chargeCustomers : async (req,res) => {
         try {
             const createCharge = await stripe.charges.create({
-                amount: 50 * 100, 
+                amount: 50 * 100,
                 currency: 'usd',
-                card: req.body.card_ID,
+                source: req.body.card_ID, // Use source instead of card
                 receipt_email: 'test@gmail.com',
-                customer: req.body.card_ID,
+                customer: req.body.customer_id, // Use customer instead of card_ID
             });
+        
             res.status(201).json({ success:true, message: "Payment successful mail will be sent to you shortly." })
         } catch (error) {
             console.error('Error creating charge:', error);
