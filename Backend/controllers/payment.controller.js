@@ -4,7 +4,7 @@ const stripe = require('stripe')(stripe_key);
 const paymentController = {
   payment: async (req, res) => {
     try {
-      const { id, duration, cardNumber, expMonth, expYear, card_CVC, name, email, charge } = req.body;
+      const { cardNumber, expMonth, expYear, card_CVC, name, email, charge } = req.body;
 
       // Create a customer
       const customer = await stripe.customers.create({
@@ -30,7 +30,7 @@ const paymentController = {
           });
 
           // Charge the customer
-          const chargeResult = await stripe.charges.create({
+          const chargeCustomer = await stripe.charges.create({
             amount: charge, 
             currency: 'usd', 
             customer: customer.id,
@@ -39,7 +39,7 @@ const paymentController = {
 
           res.status(201).json({
             success: true,
-            AmountCharged: chargeResult.amount / 100,
+            AmountCharged: chargeCustomer.amount / 100,
             message: 'Payment successfully made.',
           });
         } catch (error) {
