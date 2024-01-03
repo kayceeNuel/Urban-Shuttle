@@ -5,24 +5,24 @@ const BusController = require('../controllers/Buscontroller');
 const BusRouter = express.Router();
 
  
-BusController.post('/create', (req,res) => {
+BusRouter.post('/create', (req,res) => {
     BusController.create(req,res);
 });
 
-BusController.get('/get', (req,res) => {
+BusRouter.get('/get', (req,res) => {
     BusController.getBuses(req,res);
 });
 
-BusController.get('/id', (req,res) => {
+BusRouter.get('/id', (req,res) => {
     BusController.getBusId(req,res);
 });
 
 
-BusController.put('/:id', (req,res) => {
+BusRouter.put('/:id', (req,res) => {
     BusController.updateBusId(req,res);
 });
 
-BusController.delete('/id', (req,res) => {
+BusRouter.delete('/:id', (req,res) => {
     BusController.deleteBusId(req,res)
 });
 
