@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     lastname : String, 
     username : String,
     email : String, 
-    password : String, // will store hash password insteady of plain. 
+    password : String, 
     countrycode : String,
     phonenumber: Number
 })
