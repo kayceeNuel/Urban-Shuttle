@@ -7,10 +7,11 @@ const passengerController = {
         const passengers = await passengerModel
             .find()
             .sort({ created: -1 })
-            .select('firstName lastName email phone');
+            .select('firstname lastname email phone');
 
         res.json({ passengers });
     },
 };
 
 module.exports = passengerController;
+
